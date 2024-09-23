@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, List, Tabs } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
 import { FcTodoList } from "react-icons/fc";
@@ -7,8 +8,12 @@ import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { GrView } from "react-icons/gr";
 import { TiDelete } from "react-icons/ti";
 import { CiEdit } from "react-icons/ci";
+import { useToDoManagementHook } from "../../hooks/useToDoManagementHook";
+import { ToDoItem } from "../../models/ToDoItem";
 
 export const ToDo: React.FC = () => {
+    const { toDo } = useToDoManagementHook();
+
     const customTabBar = (icon: any, title: string) => (
         <div className="flex items-center justify-center space-x-2 h-full">
             {icon}
@@ -26,17 +31,16 @@ export const ToDo: React.FC = () => {
             <Tabs defaultActiveKey="1" size="middle" tabPosition="top" className="w-full h-full">
                 <TabPane tab={customTabBar(<LuListTodo className="text-xl" />, "A Fazer")} key="1">
                     <Button>Nova tarefa</Button>
-                    <List
-                        
-                        dataSource={tasks}
-                        renderItem={item => (
+                    <List   
+                        dataSource={toDo || []}
+                        renderItem={(item: ToDoItem) => (
                             <List.Item key={item.id}>
                                 <div style={{ flex: 1 }}>
                                     <strong>{item.title}</strong>
                                     <p>{item.description}</p>
                                 </div>
                                 <div className="flex space-x-2">
-                                    <Button icon={item.favorite === true ? <MdFavoriteBorder className="text-blue-500" /> : <MdFavorite className="text-blue-500" />}></Button>
+                                    <Button icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
                                     <Button icon={<GrView className="text-yellow-500"/>}></Button>
                                     <Button icon={<CiEdit className="text-green-500"/>}></Button>
                                     <Button icon={<TiDelete className="text-red-500" />}></Button>

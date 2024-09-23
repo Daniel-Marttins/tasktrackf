@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react"
 import { User } from "../models/User";
 import { useAuth } from "../contexts/AuthContext";
