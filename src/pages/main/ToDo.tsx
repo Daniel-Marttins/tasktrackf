@@ -1,20 +1,22 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button, Divider, List, Modal, Space, Spin, Tabs, Tooltip } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
+import { Badge, Button, Divider, List, Modal, Popover, Select, Spin, Tabs, Tooltip } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
-import { FcTodoList } from "react-icons/fc";
-import { LuListTodo } from "react-icons/lu";
-import { FaBarsProgress } from "react-icons/fa6";
-import { MdFavoriteBorder, MdFavorite, MdHistory } from "react-icons/md";
-import { GrView } from "react-icons/gr";
-import { TiDelete } from "react-icons/ti";
-import { CiCircleList, CiEdit } from "react-icons/ci";
 import { BsMenuAppFill } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
+import { FaBarsProgress } from "react-icons/fa6";
+import { FcTodoList } from "react-icons/fc";
+import { GrView } from "react-icons/gr";
+import { LuListTodo } from "react-icons/lu";
+import { MdFavorite, MdFavoriteBorder, MdHistory, MdOutlineSwapHoriz } from "react-icons/md";
+import { TiDelete } from "react-icons/ti";
+import todoIcon from "../../assets/img/simplistic-project-management-and-business-workflow.png";
 import { useToDoManagementHook } from "../../hooks/useToDoManagementHook";
 import { ToDoItem } from "../../models/ToDoItem";
-import { LoadingOutlined } from '@ant-design/icons';
 import { FormToDo } from "./components/FormToDo";
-import todoIcon from "../../assets/img/simplistic-project-management-and-business-workflow.png";
+
+const { Option } = Select;
 
 export const ToDo: React.FC = () => {
     const {
@@ -30,7 +32,10 @@ export const ToDo: React.FC = () => {
         editMode,
         setEditMode,
         favoriteToDo,
-        deleteToDoItem
+        deleteToDoItem,
+        openPopoverId, 
+        openSwitchPopover,
+        switchToDoStatus
     } = useToDoManagementHook();
 
     const customTabBar = (icon: any, title: string) => (
@@ -66,18 +71,45 @@ export const ToDo: React.FC = () => {
                             <List
                                 dataSource={toDo || []}
                                 renderItem={(item: ToDoItem) => (
-                                    <List.Item key={item.id} onClick={() => selectedToDo(item.id)} className="rounded-md transition-all duration-700 cursor-pointer hover:bg-slate-300">
-                                        <div style={{ flex: 1 }} className="mr-5 ml-2 overflow-hidden">
-                                            <strong className="text-sm text-slate-700">{item.title}</strong>
-                                            <p className="text-xs text-slate-500">{item.description}</p>
-                                        </div>
-                                        <div className="flex space-x-2 mr-2">
-                                            <Button onClick={() => favoriteToDo(item.id)} icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
-                                            <Button icon={<GrView className="text-yellow-500" />}></Button>
-                                            <Button icon={<CiEdit className="text-green-500" />}></Button>
-                                            <Button onClick={() => deleteToDoItem(item.id)} icon={<TiDelete className="text-red-500" />}></Button>
-                                        </div>
-                                    </List.Item>
+                                    <Tooltip title="Clique para editar...">
+                                        <List.Item key={item.id} onClick={() => selectedToDo(item.id)} className="rounded-md transition-all duration-700 cursor-pointer hover:bg-slate-300">
+                                            <div style={{ flex: 1 }} className="mr-5 ml-2 overflow-hidden">
+                                                <strong className="text-sm text-slate-700">{item.title}</strong>
+                                                <p className="text-xs text-slate-500">{item.description}</p>
+                                                <p className={item.taskStatus === 'TODO' ? "text-xs text-red-500 mt-2" : item.taskStatus === 'IN_PROGRESS' ? "text-xs text-yellow-500 mt-2" : "text-xs text-green-500 mt-2"}>
+                                                    <Badge
+                                                        status={
+                                                            item.taskStatus === 'TODO'
+                                                                ? 'error'
+                                                                : item.taskStatus === 'IN_PROGRESS'
+                                                                ? 'warning'
+                                                                : 'success'
+                                                        }
+                                                        className='mr-1'
+                                                    />Status: {item.taskStatus}
+                                                </p>
+                                            </div>
+                                            <div className="flex space-x-2 mr-2">
+                                                <Popover 
+                                                    open={openPopoverId === item.id} 
+                                                    onOpenChange={() => openSwitchPopover(item.id)}
+                                                    content={
+                                                        <Select onChange={(value) => switchToDoStatus(item.id, value)}  defaultValue={item.taskStatus} onClick={(e) => e.stopPropagation()} className='w-full'>
+                                                            <Option value="TODO">Pendente</Option>
+                                                            <Option value="IN_PROGRESS">Em Andamento</Option>
+                                                            <Option value="DONE">Concluir</Option>
+                                                        </Select>
+                                                    }
+                                                    title="Alterar Status"
+                                                    trigger="click"
+                                                >
+                                                    <Button onClick={(e) => e.stopPropagation()} className='mr-5' icon={<MdOutlineSwapHoriz className="text-purple-700" />}></Button>
+                                                </Popover>
+                                                <Button onClick={(e) => { e.stopPropagation(); favoriteToDo(item.id); }} icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
+                                                <Button onClick={() => deleteToDoItem(item.id)} icon={<TiDelete className="text-red-500" />}></Button>
+                                            </div>
+                                        </List.Item>
+                                    </Tooltip>
                                 )}
                             />
                         </div>
@@ -166,6 +198,7 @@ export const ToDo: React.FC = () => {
                     onCloseModal={closeModal}
                     editMode={editMode}
                     toDoItem={toDoItem || null}
+                    setEditMode={setEditMode}
                 />
             </Modal>
         </div>

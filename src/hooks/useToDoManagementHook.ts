@@ -1,17 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Modal, notification, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { ToDoService } from "../services/ToDoService";
 import { ToDoItem } from "../models/ToDoItem";
-import { Modal, notification } from "antd";
+import { ToDoService } from "../services/ToDoService";
 
+const { Option } = Select;
 export const useToDoManagementHook = () => {
     const { user: token } = useAuth();
     const { getAllToDoItems, updatedToDo, deleteToDo } = ToDoService();
     const [toDo, setToDo] = useState<ToDoItem[] | null>(null);
-    const [ toDoItem, setToDoItem ] = useState<ToDoItem | null>(null);
+    const [toDoItem, setToDoItem] = useState<ToDoItem | null>(null);
     const [open, setOpen] = useState(false);
+    const [openPopoverId, setOpenPopoverId] = useState<number | null>(null);
     const [editMode, setEditMode] = useState(false);
     const [spinning, setSpining] = useState(false);
 
@@ -50,6 +52,27 @@ export const useToDoManagementHook = () => {
         }
     }
 
+    const openSwitchPopover = (id: number) => {
+        if (openPopoverId === id) {
+            setOpenPopoverId(null);
+        } else {
+            setOpenPopoverId(id);
+        }
+    };
+
+    const switchToDoStatus = async (id: number, status: string) => {
+        const toDoItem = toDo?.find(todo => todo.id === id);
+        if (toDoItem) {
+            setSpining(true);
+            toDoItem.taskStatus = status;
+            setSpining(true);
+            await updatedToDo(id, toDoItem);
+            setSpining(false);
+            notification.success({ message: 'Status atualizado!' });
+            getToDo();
+        }
+    }
+
     const deleteToDoItem = async (id: number) => {
         Modal.confirm({
             title: 'Excluir esta tarefa',
@@ -74,11 +97,7 @@ export const useToDoManagementHook = () => {
             setToDoItem(toDoItem);
             setOpen(true);
             setEditMode(true);
-        } else {
-            setToDoItem(null);
-            setOpen(false);
-            setEditMode(false);
-        }
+        } 
     }
 
     const openModal = () => {
@@ -103,7 +122,10 @@ export const useToDoManagementHook = () => {
         editMode,
         setEditMode,
         favoriteToDo,
-        deleteToDoItem
+        deleteToDoItem,
+        openPopoverId, 
+        openSwitchPopover,
+        switchToDoStatus
     }
 
 }

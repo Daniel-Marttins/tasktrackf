@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button, Checkbox, ColorPicker, Form, Input, Select, Space, Spin, Tooltip } from "antd";
-import { useToDoHook } from "../hooks/useToDoHook";
-import { MdOutlineSave, MdDeleteOutline } from "react-icons/md";
-import { CiCircleList } from "react-icons/ci";
+import { LoadingOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, Select, Space, Spin, Tooltip } from "antd";
 import { CiEdit } from "react-icons/ci";
-import { useToDoManagementHook } from "../../../hooks/useToDoManagementHook";
+import { MdDeleteOutline, MdOutlineSave } from "react-icons/md";
 import { ToDoItem } from "../../../models/ToDoItem";
+import { useToDoHook } from "../hooks/useToDoHook";
 
 const { Option } = Select;
 
@@ -14,13 +13,15 @@ export interface FormProps {
     onCloseModal: () => void;
     editMode: boolean;
     toDoItem?: ToDoItem | null;
+    setEditMode: (visible: boolean) => void;
 }
 
 export const FormToDo: React.FC<FormProps> = ({
     refreshToDoList,
     onCloseModal,
     editMode,
-    toDoItem
+    toDoItem,
+    setEditMode
 }) => {
     const {
         form,
@@ -33,6 +34,7 @@ export const FormToDo: React.FC<FormProps> = ({
 
     return (
         <div className="flex flex-row justify-between w-full h-1/2 mb-5">
+            <Spin spinning={spinning} tip={editMode === false ? "Criando..." : "Atualizando..." } fullscreen indicator={<LoadingOutlined spin />} />
             <div className="justify-start w-80">
                 <h1 className="text-xl flex flex-col">
                     Detalhes da Tarefa
@@ -53,9 +55,7 @@ export const FormToDo: React.FC<FormProps> = ({
                 autoComplete="off"
             >
                 <Space className="absolute right-3 -top-5">
-                    <Tooltip title={"Listar"}><Button icon={<CiCircleList />}></Button></Tooltip>
-                    <Tooltip title={"Salvar"}><Button htmlType="submit" icon={<MdOutlineSave />}></Button></Tooltip>
-                    <Tooltip title={"Editar"}><Button icon={<CiEdit />}></Button></Tooltip>
+                    <Tooltip title={editMode === false ? "Salvar" : "Editar"}><Button htmlType="submit" icon={editMode === false ? <MdOutlineSave /> : <CiEdit />}></Button></Tooltip>
                     <Tooltip title={"Deletar"}><Button icon={<MdDeleteOutline />}></Button></Tooltip>
                 </Space>
                 <div className="flex flex-row w-full">
@@ -118,7 +118,7 @@ export const FormToDo: React.FC<FormProps> = ({
                     <Form.Item
                         name="color"
                         label="Cor"
-                        className="w-2/6 border"
+                        className="w-2/6"
                     >
                         {colors.map((color) => (
                             <button
