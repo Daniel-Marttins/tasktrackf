@@ -1,8 +1,17 @@
 import { message, notification } from "antd";
 import { api } from "../api/api";
 import { AxiosError } from "axios";
+import { ToDoItem } from "../models/ToDoItem";
 
 export const ToDoService = () => {
+
+    const createToDoItem = async (toDoItem: ToDoItem, id: number) => {
+        try {
+            const response = await api.post(`/api/to-do/create?id=${id}`, toDoItem);
+            return response.data;
+        } catch (error) {
+        }
+    }
 
     const getAllToDoItems = async (id: number) => {
         try {
@@ -28,6 +37,7 @@ export const ToDoService = () => {
     }
 
     return {
+        createToDoItem,
         getAllToDoItems
     }
 }

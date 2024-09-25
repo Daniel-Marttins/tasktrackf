@@ -1,6 +1,7 @@
 export class ToDoItem {
     id!:number;
     uid!:number;
+    ownerId!: { id: number};
     title!: string;
     taskStatus!: string;
     description!: string;
