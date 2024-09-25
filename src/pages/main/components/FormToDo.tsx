@@ -13,12 +13,14 @@ export interface FormProps {
     refreshToDoList: () => void;
     onCloseModal: () => void;
     editMode: boolean;
+    toDoItem?: ToDoItem | null;
 }
 
 export const FormToDo: React.FC<FormProps> = ({
     refreshToDoList,
     onCloseModal,
-    editMode
+    editMode,
+    toDoItem
 }) => {
     const {
         form,
@@ -27,7 +29,7 @@ export const FormToDo: React.FC<FormProps> = ({
         selectedColor,
         handleColorSelect,
         spinning
-    } = useToDoHook(refreshToDoList, onCloseModal, editMode);
+    } = useToDoHook(refreshToDoList, onCloseModal, editMode, toDoItem);
 
     return (
         <div className="flex flex-row justify-between w-full h-1/2 mb-5">

@@ -19,6 +19,8 @@ import todoIcon from "../../assets/img/simplistic-project-management-and-busines
 export const ToDo: React.FC = () => {
     const {
         toDo,
+        toDoItem,
+        selectedToDo,
         getToDo,
         open,
         openModal,
@@ -26,7 +28,9 @@ export const ToDo: React.FC = () => {
         spinning,
         setSpining,
         editMode,
-        setEditMode
+        setEditMode,
+        favoriteToDo,
+        deleteToDoItem
     } = useToDoManagementHook();
 
     const customTabBar = (icon: any, title: string) => (
@@ -38,7 +42,7 @@ export const ToDo: React.FC = () => {
 
     return (
         <div className="flex items-center justify-center w-full h-full">
-            <Spin spinning={spinning} fullscreen={true} indicator={<LoadingOutlined spin />} />
+            <Spin spinning={spinning} tip="Atualizando..." fullscreen indicator={<LoadingOutlined spin />} />
             <Tabs defaultActiveKey="1" size="middle" tabPosition="top" className="w-full h-full">
                 <TabPane tab={customTabBar(<BsMenuAppFill className="text-xl" />, "Menu To-Do")} key="1">
                     <div className="flex flex-row justify-between w-full h-1/2 mb-5">
@@ -51,7 +55,7 @@ export const ToDo: React.FC = () => {
                             </h1>
                             <img src={todoIcon} />
                         </div>
-                        <div className="mr-3">
+                        <div className="mr-3 w-2/4">
                             <div className="mb-5">
                                 <h1 className="flex items-center justify-start text-2xl font-bold mb-3">
                                     Últimas tarefas adicionadas
@@ -62,16 +66,16 @@ export const ToDo: React.FC = () => {
                             <List
                                 dataSource={toDo || []}
                                 renderItem={(item: ToDoItem) => (
-                                    <List.Item key={item.id}>
-                                        <div style={{ flex: 1 }} className="mr-5">
-                                            <strong className="text-sm">{item.title}</strong>
-                                            <p>{item.description}</p>
+                                    <List.Item key={item.id} onClick={() => selectedToDo(item.id)} className="rounded-md transition-all duration-700 cursor-pointer hover:bg-slate-300">
+                                        <div style={{ flex: 1 }} className="mr-5 ml-2 overflow-hidden">
+                                            <strong className="text-sm text-slate-700">{item.title}</strong>
+                                            <p className="text-xs text-slate-500">{item.description}</p>
                                         </div>
-                                        <div className="flex space-x-2">
-                                            <Button icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
+                                        <div className="flex space-x-2 mr-2">
+                                            <Button onClick={() => favoriteToDo(item.id)} icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
                                             <Button icon={<GrView className="text-yellow-500" />}></Button>
                                             <Button icon={<CiEdit className="text-green-500" />}></Button>
-                                            <Button icon={<TiDelete className="text-red-500" />}></Button>
+                                            <Button onClick={() => deleteToDoItem(item.id)} icon={<TiDelete className="text-red-500" />}></Button>
                                         </div>
                                     </List.Item>
                                 )}
@@ -86,8 +90,8 @@ export const ToDo: React.FC = () => {
                             item.taskStatus === "TODO" && (
                                 <List.Item key={item.id}>
                                     <div style={{ flex: 1 }}>
-                                        <strong>{item.title}</strong>
-                                        <p>{item.description}</p>
+                                        <strong className="text-slate-700">{item.title}</strong>
+                                        <p className="text-xs text-slate-500">{item.description}</p>
                                     </div>
                                     <div className="flex space-x-2">
                                         <Button icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
@@ -107,8 +111,8 @@ export const ToDo: React.FC = () => {
                             item.taskStatus === "IN_PROGRESS" && (
                                 <List.Item key={item.id}>
                                     <div style={{ flex: 1 }}>
-                                        <strong>{item.title}</strong>
-                                        <p>{item.description}</p>
+                                        <strong className="text-slate-700">{item.title}</strong>
+                                        <p className="text-xs text-slate-500">{item.description}</p>
                                     </div>
                                     <div className="flex space-x-2">
                                         <Button icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
@@ -128,8 +132,8 @@ export const ToDo: React.FC = () => {
                             item.taskStatus === "DONE" && (
                                 <List.Item key={item.id}>
                                     <div style={{ flex: 1 }}>
-                                        <strong>{item.title}</strong>
-                                        <p>{item.description}</p>
+                                        <strong className="text-slate-700">{item.title}</strong>
+                                        <p className="text-xs text-slate-500">{item.description}</p>
                                     </div>
                                     <div className="flex space-x-2">
                                         <Button icon={item.favorite === true ? <MdFavorite className="text-blue-500" /> : <MdFavoriteBorder className="text-blue-500" />}></Button>
@@ -161,6 +165,7 @@ export const ToDo: React.FC = () => {
                     refreshToDoList={getToDo}
                     onCloseModal={closeModal}
                     editMode={editMode}
+                    toDoItem={toDoItem || null}
                 />
             </Modal>
         </div>
