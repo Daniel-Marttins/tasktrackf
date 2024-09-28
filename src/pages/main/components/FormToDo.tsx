@@ -34,7 +34,7 @@ export const FormToDo: React.FC<FormProps> = ({
 
     return (
         <div className="flex flex-row justify-between w-full h-1/2 mb-5">
-            <Spin spinning={spinning} tip={editMode === false ? "Criando..." : "Atualizando..." } fullscreen indicator={<LoadingOutlined spin />} />
+            <Spin spinning={spinning} tip={editMode === false ? "Criando..." : "Atualizando..."} fullscreen indicator={<LoadingOutlined spin />} />
             <div className="justify-start w-80">
                 <h1 className="text-xl flex flex-col">
                     Detalhes da Tarefa
@@ -110,8 +110,9 @@ export const FormToDo: React.FC<FormProps> = ({
                     </Form.Item>
                     <Form.Item
                         name="favorite"
-                        label="Status"
+                        label="Favoritar"
                         className="w-2/6"
+                        valuePropName="checked"
                     >
                         <Checkbox>Favoritar?</Checkbox>
                     </Form.Item>

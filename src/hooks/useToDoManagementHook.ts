@@ -6,16 +6,16 @@ import { useAuth } from "../contexts/AuthContext";
 import { ToDoItem } from "../models/ToDoItem";
 import { ToDoService } from "../services/ToDoService";
 
-const { Option } = Select;
 export const useToDoManagementHook = () => {
     const { user: token } = useAuth();
     const { getAllToDoItems, updatedToDo, deleteToDo } = ToDoService();
     const [toDo, setToDo] = useState<ToDoItem[] | null>(null);
     const [toDoItem, setToDoItem] = useState<ToDoItem | null>(null);
     const [open, setOpen] = useState(false);
-    const [openPopoverId, setOpenPopoverId] = useState<number | null>(null);
     const [editMode, setEditMode] = useState(false);
     const [spinning, setSpining] = useState(false);
+    const [openPopoverId, setOpenPopoverId] = useState<number | null>(null);
+    const [activeTabKey, setActiveTabKey] = useState<string>('1');
 
     useEffect(() => {
         const getToDo = async () => {
@@ -47,7 +47,7 @@ export const useToDoManagementHook = () => {
             setSpining(true);
             await updatedToDo(id, toDoItem);
             setSpining(false);
-            notification.success({ message: 'Tarefa favoritada.' });
+            toDoItem.favorite === true ? notification.success({ message: 'Adicionada aos Favoritos' }) : notification.warning({ message: 'Removida dos favoritos' });
             getToDo();
         }
     }
@@ -68,10 +68,21 @@ export const useToDoManagementHook = () => {
             setSpining(true);
             await updatedToDo(id, toDoItem);
             setSpining(false);
-            notification.success({ message: 'Status atualizado!' });
+            notification.success({ 
+                message: 'Status atualizado!', 
+                description: `Status : ${
+                    toDoItem.taskStatus === 'TODO' ? ' A Fazer' :
+                    toDoItem.taskStatus === 'IN_PROGRESS'? ' Em Andamento' :
+                    ' Concluído'
+                }` 
+            });
             getToDo();
         }
     }
+
+    const handleTabChange = (key: string) => {
+        setActiveTabKey(key);
+    };
 
     const deleteToDoItem = async (id: number) => {
         Modal.confirm({
@@ -125,7 +136,9 @@ export const useToDoManagementHook = () => {
         deleteToDoItem,
         openPopoverId, 
         openSwitchPopover,
-        switchToDoStatus
+        switchToDoStatus,
+        activeTabKey,
+        handleTabChange
     }
 
 }

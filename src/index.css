@@ -15,6 +15,13 @@ code {
   font-family: 'Ubuntu';
 }
 
+/* Estilos para sobrescrever o fundo do modal 
+.ant-modal-content {
+  background-color: #1F2127 !important; 
+  color: white;
+}
+*/
+
 @media (max-width: 600px) {
   .register-button {
     font-size: small;

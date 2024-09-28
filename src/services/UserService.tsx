@@ -2,6 +2,7 @@ import { message, notification } from "antd";
 import { api } from "../api/api";
 import { Login } from "../models/Login";
 import { AxiosError } from "axios";
+import { User } from "../models/User";
 
 export const userService = () => {
 
@@ -51,7 +52,31 @@ export const userService = () => {
         }
     };
 
-    return { getUserByLogin, getUserById };
+    const updateUser = async (id: number, user: User) => {
+        try {
+            const response = await api.put(`/api/user/update?id=${id}`, user);
+            return response.data;
+        } catch (error) {
+            const axiosError = error as AxiosError;
+
+            if (axiosError.response) {
+                const axiosErrorMessage = axiosError.response.data === "User ID not found!" 
+                ? "Usuário não encontrado!"
+                : "Erro do Servico";
+                notification.error({
+                    message: "Erro ao atualizar usuário",
+                    description: `${axiosErrorMessage}`,
+                    placement: 'topRight',
+                });
+                console.log(axiosError);
+            } else {
+                message.error("Erro de rede: verifique sua conexão.");
+            }
+
+        }
+    }
+
+    return { getUserByLogin, getUserById, updateUser };
 };
 
 

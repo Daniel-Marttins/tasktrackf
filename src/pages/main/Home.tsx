@@ -1,7 +1,5 @@
 import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu } from 'antd';
 import logo from '../../assets/img/Logo-white.png';
 import { MainTypes } from './components/MainTypes';
 import { Link } from 'react-router-dom';

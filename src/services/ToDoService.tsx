@@ -9,10 +9,12 @@ export const ToDoService = () => {
     const createToDoItem = async (toDoItem: ToDoItem, id: number) => {
         try {
             const response = await api.post(`/api/to-do/create?id=${id}`, toDoItem);
+            console.log(response.data);
             return response.data;
         } catch (error) {
             const axiosError = error as AxiosError;
             console.log(error);
+            console.log(axiosError);
 
             if (axiosError.response) {
                 const axiosErrorMessage = axiosError.response.data === "User not found!"

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import { Card, Button, Avatar } from 'antd'
+import { Card, Button, Avatar, Modal, Divider } from 'antd'
 import { TfiDashboard } from "react-icons/tfi";
 import { FaRegEye, FaBarsProgress } from "react-icons/fa6";
 import { LuListTodo } from "react-icons/lu"
@@ -10,9 +12,20 @@ import { UserOutlined } from '@ant-design/icons';
 import { useUserManagementHook } from "../../hooks/useUserManagementHook";
 import moment from 'moment';
 import { ToDoItem } from "../../models/ToDoItem";
+import { FormUser } from "./components/FormUser";
 
 export const Dashboard: React.FC = () => {
-    const { user, logout } = useUserManagementHook();
+    const {
+        user,
+        logout,
+        getUser,
+        editMode,
+        openModal,
+        closeModal,
+        open,
+        setOpen,
+        selectedUser
+    } = useUserManagementHook();
 
     return (
         <div className="flex flex-col w-full h-full items-center justify-center bg-transparent">
@@ -22,12 +35,33 @@ export const Dashboard: React.FC = () => {
             </h1>
             <div className="flex items-start justify-between w-full px-4 mb-8">
                 <div className="flex items-center justify-start w-1/2">
-                    <Avatar size={64} icon={<UserOutlined />} />
+                    <Avatar size={64} src={user?.imgUrl ? user?.imgUrl : <UserOutlined />} />
                     <div className="ml-4 flex flex-col">
                         <span className="text-lg font-semibold">{user?.username}</span>
                         <span className="text-sm text-gray-500">Criado em: {moment(user?.createAt).format('DD-MM-YYYY')}</span>
-                        <a href="#" className="text-sm text-blue-500 curs">Minha Conta</a>
+                        <a href="#my-account" onClick={() => selectedUser()} className="text-sm text-blue-500 curs">Minha Conta</a>
                     </div>
+                    <Modal
+                        open={open}
+                        onCancel={closeModal}
+                        footer={null}
+                        maskClosable={false}
+                        centered
+                        width={800}
+                        className="overflow-hidden"
+                    >
+                        <Divider orientation="left" className="m-0 p-0">
+                            <h1 className="text-xl">
+                                Minha Conta
+                            </h1>
+                        </Divider>
+                        <FormUser
+                            refreshUser={getUser}
+                            onCloseModal={closeModal}
+                            editMode={editMode}
+                            userData={user || null}
+                        />
+                    </Modal>
                 </div>
                 <div className="flex flex-col items-end justify-center w-1/2 h-full">
                     <Button icon={<CiLogin />} onClick={() => logout()}>Sair</Button>
