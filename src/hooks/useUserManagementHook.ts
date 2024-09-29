@@ -35,7 +35,7 @@ export const useUserManagementHook = () => {
         }
     };
 
-    const selectedUser = () => {
+    const selectedUser = async () => {
         const userItem = user;
         if (userItem) {
             setUser(userItem);

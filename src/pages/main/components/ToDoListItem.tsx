@@ -2,6 +2,7 @@ import { Badge, Button, List, Select, Tooltip } from "antd";
 import { MdFavorite, MdFavoriteBorder, MdOutlineSwapHoriz } from "react-icons/md";
 import { TiDelete } from "react-icons/ti";
 import { ToDoItem } from "../../../models/ToDoItem";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 const { Option } = Select;
 
@@ -33,16 +34,23 @@ export const ToDoListItem: React.FC<ToDoListItemProps> = ({
         }
     };
 
+    const { palette, theme } = useTheme();
+
     return (
         <Tooltip title="Clique para editar...">
             <List.Item
                 key={item.id}
                 onClick={() => selectedToDo(item.id)}
-                className="rounded-md transition-all duration-700 cursor-pointer overflow-hidden hover:bg-slate-300"
+                className={
+                    theme === "dark" ? 'mr-5 ml-2 overflow-hidden rounded-md transition-all duration-700 cursor-pointer hover:bg-slate-800' :
+                    'mr-5 ml-2 rounded-md transition-all duration-700 cursor-pointer overflow-hidden hover:bg-slate-300'
+                }
             >
-                <div style={{ flex: 1 }} className="mr-5 ml-2 overflow-hidden rounded-md transition-all duration-700 cursor-pointer hover:bg-slate-300">
-                    <strong className="text-sm text-slate-700">{item.title}</strong>
-                    <p className="text-xs text-slate-500">{item.description}</p>
+                <div style={{ flex: 1 }} 
+                    className="mr-5 ml-2 overflow-hidden rounded-md transition-all duration-700 p-2"
+                >
+                    <strong className="text-sm" style={{ color: palette.fontColor}}>{item.title}</strong>
+                    <p className="text-xs" style={{ color: palette.subFontColor}}>{item.description}</p>
                     <p
                         className={
                             item.taskStatus === 'TODO'
@@ -93,7 +101,10 @@ export const ToDoListItem: React.FC<ToDoListItemProps> = ({
                         }
                     ></Button>
                     <Button
-                        onClick={() => deleteToDoItem(item.id)}
+                        onClick={(e) => { 
+                            e.stopPropagation();
+                            deleteToDoItem(item.id)
+                        }}
                         icon={<TiDelete className="text-red-500" />}
                     ></Button>
                 </div>

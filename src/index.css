@@ -4,6 +4,11 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
+:root {
+  --modal-background: #334155; 
+  --modal-text-color: white;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Ubuntu';
@@ -15,12 +20,51 @@ code {
   font-family: 'Ubuntu';
 }
 
-/* Estilos para sobrescrever o fundo do modal 
-.ant-modal-content {
-  background-color: #1F2127 !important; 
-  color: white;
+.light-theme {
+  --modal-background: #e2e8f0;
+  --modal-text-color: black; 
 }
-*/
+
+.ant-modal-content {
+  background-color: var(--modal-background) !important;
+  color: var(--modal-text-color) !important;
+}
+
+.custom-menu-item {
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.custom-menu-item:hover, 
+.custom-menu-item:focus, 
+.custom-menu-item.ant-menu-item-selected {
+  color: white !important;
+}
+
+.custom-menu-item-light {
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.custom-menu-item-light:hover, 
+.custom-menu-item-light:focus, 
+.custom-menu-item-light.ant-menu-item-selected {
+  color: #0284c7 !important;
+}
+
+.light-select .ant-select-selector {
+  background-color: #f1f5f9 !important;
+  border:  #64748B !important;
+  color: #64748b !important;
+  scroll-behavior: smooth;
+}
+
+.dark-select .ant-select-selector {
+  background-color: #152b3c !important;
+  border:  #d1d5db !important;
+  color: #d1d5db !important;
+  scroll-behavior: smooth;
+}
+
+
 
 @media (max-width: 600px) {
   .register-button {

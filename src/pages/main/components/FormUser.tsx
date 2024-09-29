@@ -9,6 +9,7 @@ import { useToDoHook } from "../hooks/useToDoHook";
 import { User } from '../../../models/User';
 import { useUserHook } from '../hooks/useUserHook';
 import moment from 'moment';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 const { Option } = Select;
 
@@ -38,6 +39,8 @@ export const FormUser: React.FC<FormProps> = ({
         editMode,
         userData
     );
+
+    const { palette } = useTheme();
 
     return (
         <div className="flex flex-row justify-between w-full h-1/2 mb-5">
@@ -83,33 +86,32 @@ export const FormUser: React.FC<FormProps> = ({
                 </div>
                 <div className="w-9/12 border-l p-2 border-gray-300 h-full flex-col">
                     <Space className="absolute right-3 -top-5">
-                        <Tooltip title={editMode === false ? "Salvar" : "Editar"}><Button htmlType="submit" icon={editMode === false ? <MdOutlineSave /> : <CiEdit />}></Button></Tooltip>
-                        <Tooltip title={"Deletar"}><Button icon={<MdDeleteOutline />}></Button></Tooltip>
+                        <Tooltip title={editMode === false ? "Salvar" : "Editar"}><Button style={{ background: palette.secondary }} htmlType="submit" icon={editMode === false ? <MdOutlineSave className='text-green-600' /> : <CiEdit className='text-green-600' />}></Button></Tooltip>
                     </Space>
                     <div className="flex flex-row w-full">
-                        <Form.Item name="id" label="ID" className="w-1/1 mr-3">
-                            <Input disabled />
+                        <Form.Item name="id" label={<span style={{ color: palette.fontColor }}>ID</span>} className="w-1/1 mr-3">
+                            <Input style={{ background: palette.secondary, color: palette.fontColor }} disabled />
                         </Form.Item>
                         <Form.Item
                             name="username"
-                            label="Nome de Usuário"
+                            label={<span style={{ color: palette.fontColor }}>Nome de usuário</span>}
                             className="w-4/5"
                             rules={[
                                 { required: true, message: "Insira um nome!" },
                             ]}
                             normalize={(value: string) => value?.toUpperCase()}
                         >
-                            <Input style={{ textTransform: "uppercase" }} />
+                            <Input style={{ textTransform: "uppercase", background: palette.secondary, color: palette.fontColor }} />
                         </Form.Item>
                     </div>
                     <div className="flex flex-row w-full">
                         <Form.Item
                             name="email"
-                            label="Email"
+                            label={<span style={{ color: palette.fontColor }}>Email</span>}
                             className="w-full"
                             normalize={(value: string) => value?.toUpperCase()}
                         >
-                            <Input style={{ textTransform: "uppercase" }} />
+                            <Input style={{ textTransform: "uppercase", background: palette.secondary, color: palette.fontColor }} />
                         </Form.Item>
                     </div>
                 </div>

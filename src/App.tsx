@@ -12,6 +12,7 @@ import { useAuth } from './contexts/AuthContext';
 import { Home } from './pages/main/Home';
 import { Dashboard } from './pages/main/Dashboard';
 import { ToDo } from './pages/main/ToDo';
+import { Configuration } from './pages/main/Configuration';
 
 function App() {
   const { logado, loading } = useAuth();
@@ -33,6 +34,7 @@ function App() {
           >
             <Route path="/home/dashboard" element={<Dashboard />} />
             <Route path="/home/to-do" element={<ToDo />} />
+            <Route path="/home/settings" element={<Configuration />} />
           </Route>
         </Routes>
       </Router>

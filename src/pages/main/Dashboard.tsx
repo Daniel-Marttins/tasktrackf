@@ -13,6 +13,7 @@ import { useUserManagementHook } from "../../hooks/useUserManagementHook";
 import moment from 'moment';
 import { ToDoItem } from "../../models/ToDoItem";
 import { FormUser } from "./components/FormUser";
+import { useTheme } from "../../contexts/ThemeContext";
 
 export const Dashboard: React.FC = () => {
     const {
@@ -27,18 +28,20 @@ export const Dashboard: React.FC = () => {
         selectedUser
     } = useUserManagementHook();
 
+    const { palette } = useTheme();
+
     return (
         <div className="flex flex-col w-full h-full items-center justify-center bg-transparent">
             <h1 className='flex items-center justify-start w-full px-4 text-white mb-4 text-3xl pb-3'>
-                <TfiDashboard className="mr-4 ml-2 mt-2 h-full text-3xl font-bold" style={{ color: "#1F2127" }} />
-                <span style={{ color: "#1F2127" }} className="font-bold" >Dashboard</span>
+                <TfiDashboard className="mr-4 ml-2 mt-2 h-full text-3xl font-bold" style={{ color: palette.fontColor }} />
+                <span style={{ color: palette.fontColor }} className="font-bold" >Dashboard</span>
             </h1>
             <div className="flex items-start justify-between w-full px-4 mb-8">
                 <div className="flex items-center justify-start w-1/2">
-                    <Avatar size={64} src={user?.imgUrl ? user?.imgUrl : <UserOutlined />} />
+                    <Avatar size={64} src={user?.imgUrl ? user?.imgUrl : <UserOutlined />} style={{ background: palette.subFontColor }} />
                     <div className="ml-4 flex flex-col">
                         <span className="text-lg font-semibold">{user?.username}</span>
-                        <span className="text-sm text-gray-500">Criado em: {moment(user?.createAt).format('DD-MM-YYYY')}</span>
+                        <span className="text-sm" style={{ color: palette.subFontColor }}>Criado em: {moment(user?.createAt).format('DD-MM-YYYY')}</span>
                         <a href="#my-account" onClick={() => selectedUser()} className="text-sm text-blue-500 curs">Minha Conta</a>
                     </div>
                     <Modal
@@ -50,8 +53,8 @@ export const Dashboard: React.FC = () => {
                         width={800}
                         className="overflow-hidden"
                     >
-                        <Divider orientation="left" className="m-0 p-0">
-                            <h1 className="text-xl">
+                        <Divider orientation="left" className="m-0 p-0" style={{ border: palette.fontColor }}>
+                            <h1 className="text-xl" style={{ color: palette.fontColor }}>
                                 Minha Conta
                             </h1>
                         </Divider>
@@ -64,7 +67,7 @@ export const Dashboard: React.FC = () => {
                     </Modal>
                 </div>
                 <div className="flex flex-col items-end justify-center w-1/2 h-full">
-                    <Button icon={<CiLogin />} onClick={() => logout()}>Sair</Button>
+                    <Button icon={<CiLogin />} style={{ color: palette.secondary, background: palette.fontColor }} onClick={() => logout()}>Sair</Button>
                 </div>
             </div>
             <div className="flex flex-wrap w-full -mx-4">
@@ -72,6 +75,7 @@ export const Dashboard: React.FC = () => {
                     <Card
                         bordered={false}
                         className="flex flex-col shadow-lg rounded-lg h-full"
+                        style={{ color: palette.fontColor, background: palette.primary }}
                     >
                         <div className="flex items-center justify-between">
                             <span className="text-lg font-semibold">Total de Tarefas</span>
@@ -89,6 +93,7 @@ export const Dashboard: React.FC = () => {
                     <Card
                         bordered={false}
                         className="flex flex-col shadow-lg rounded-lg h-full"
+                        style={{ color: palette.fontColor, background: palette.primary }}
                     >
                         <div className="flex items-center justify-between">
                             <span className="text-lg font-semibold text-yellow-500">A Fazer</span>
@@ -106,6 +111,7 @@ export const Dashboard: React.FC = () => {
                     <Card
                         bordered={false}
                         className="flex flex-col shadow-lg rounded-lg h-full"
+                        style={{ color: palette.fontColor, background: palette.primary }}
                     >
                         <div className="flex items-center justify-between">
                             <span className="text-lg font-semibold text-blue-500">Em Andamento</span>
@@ -123,6 +129,7 @@ export const Dashboard: React.FC = () => {
                     <Card
                         bordered={false}
                         className="flex flex-col shadow-lg rounded-lg h-full"
+                        style={{ color: palette.fontColor, background: palette.primary }}
                     >
                         <div className="flex items-center justify-between">
                             <span className="text-lg font-semibold text-green-500">Concluídas</span>

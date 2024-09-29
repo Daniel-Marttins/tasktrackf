@@ -1,11 +1,18 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, Spin } from "antd";
 import Background from '../../assets/img/watercolor-light-steel-blue-wallpaper-image.jpg';
+import { useRegisterHook } from "./hooks/useRegisterHook";
+import { LoadingOutlined } from '@ant-design/icons';
 
 export const Register: React.FC = () => {
-    const [form] = Form.useForm();
+    const {  
+        form,
+        onFinish,
+        spinning,
+    } = useRegisterHook();
 
     return (
         <div className="flex w-full h-full p-4" style={{ background: "#1F2127" }}>
+            <Spin spinning={spinning} tip="Criando..." fullscreen indicator={<LoadingOutlined spin />} />
             <div className="flex flex-col items-center justify-center w-2/5 overflow-hidden">
                 <h1 className="flex flex-col items-center justify-center text-3xl font-bold text-center text-white">
                     <a href="/">TaskTrack</a>
@@ -15,11 +22,12 @@ export const Register: React.FC = () => {
                 </h1>
                 <Form
                     form={form}
+                    onFinish={onFinish}
                     layout="vertical"
                     className="flex flex-col mt-16 w-72 items-center justify-center overflow-hidden"
                 >
                     <Form.Item
-                        name="usename"
+                        name="username"
                         label={<span className="font-bold text-white">Nome</span>}
                         rules={[
                             { required: true, type: 'string', message: "Nome é necessario!" },

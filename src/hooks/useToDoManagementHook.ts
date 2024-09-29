@@ -44,7 +44,6 @@ export const useToDoManagementHook = () => {
         if (toDoItem) {
             setSpining(true);
             toDoItem.favorite = toDoItem.favorite === true ? false : true;
-            setSpining(true);
             await updatedToDo(id, toDoItem);
             setSpining(false);
             toDoItem.favorite === true ? notification.success({ message: 'Adicionada aos Favoritos' }) : notification.warning({ message: 'Removida dos favoritos' });
@@ -61,18 +60,21 @@ export const useToDoManagementHook = () => {
     };
 
     const switchToDoStatus = async (id: number, status: string) => {
-        const toDoItem = toDo?.find(todo => todo.id === id);
+        let toDoItem = toDo?.find(todo => todo.id === id);
         if (toDoItem) {
+            toDoItem = {
+                ...toDoItem,
+                ownerId: { id: token!.id }
+            }
             setSpining(true);
-            toDoItem.taskStatus = status;
-            setSpining(true);
-            await updatedToDo(id, toDoItem);
+            toDoItem!.taskStatus = status;
+            await updatedToDo(id, toDoItem!);
             setSpining(false);
             notification.success({ 
                 message: 'Status atualizado!', 
                 description: `Status : ${
-                    toDoItem.taskStatus === 'TODO' ? ' A Fazer' :
-                    toDoItem.taskStatus === 'IN_PROGRESS'? ' Em Andamento' :
+                    toDoItem!.taskStatus === 'TODO' ? ' A Fazer' :
+                    toDoItem!.taskStatus === 'IN_PROGRESS'? ' Em Andamento' :
                     ' Concluído'
                 }` 
             });

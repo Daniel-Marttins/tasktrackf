@@ -16,7 +16,7 @@ export const useUserHook = (
     userData?: User | null
 ) => {
     const [form] = Form.useForm<User>();
-    const { user } = useAuth();
+    const { user, login } = useAuth();
     const { updateUser } = userService();
     const [spinning, setSpinning] = useState(false);
     const [image, setImage] = useState<UploadFile | any>(null);
@@ -38,7 +38,6 @@ export const useUserHook = (
                 form.resetFields();
             } else {
                 setSpinning(true);
-
             }
         } catch (error) {
             console.error(error);

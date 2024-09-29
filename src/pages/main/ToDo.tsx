@@ -1,23 +1,19 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingOutlined } from '@ant-design/icons';
-import { Badge, Button, Divider, List, Modal, Popover, Select, Spin, Tabs, Tooltip } from "antd";
+import { Badge, Button, Divider, List, Modal, Select, Spin, Tabs } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
 import { BsMenuAppFill } from "react-icons/bs";
-import { CiEdit } from "react-icons/ci";
 import { FaBarsProgress } from "react-icons/fa6";
 import { FcTodoList } from "react-icons/fc";
-import { GrView } from "react-icons/gr";
 import { LuListTodo } from "react-icons/lu";
-import { MdFavorite, MdFavoriteBorder, MdHistory, MdOutlineSwapHoriz } from "react-icons/md";
-import { TiDelete } from "react-icons/ti";
+import { MdHistory } from "react-icons/md";
 import todoIcon from "../../assets/img/simplistic-project-management-and-business-workflow.png";
 import { useToDoManagementHook } from "../../hooks/useToDoManagementHook";
 import { ToDoItem } from "../../models/ToDoItem";
 import { FormToDo } from "./components/FormToDo";
 import { ToDoListItem } from './components/ToDoListItem';
-
-const { Option } = Select;
+import { useTheme } from '../../contexts/ThemeContext';
 
 export const ToDo: React.FC = () => {
     const {
@@ -29,22 +25,20 @@ export const ToDo: React.FC = () => {
         openModal,
         closeModal,
         spinning,
-        setSpining,
         editMode,
         setEditMode,
         favoriteToDo,
         deleteToDoItem,
-        openPopoverId,
-        openSwitchPopover,
         switchToDoStatus,
-        activeTabKey,
         handleTabChange
     } = useToDoManagementHook();
+
+    const { palette } = useTheme();
 
     const customTabBar = (icon: any, title: string) => (
         <div className="flex items-center justify-center space-x-2 h-full">
             {icon}
-            <span>{title}</span>
+            <span style={{ color: palette.fontColor }}>{title}</span>
         </div>
     );
 
@@ -52,7 +46,7 @@ export const ToDo: React.FC = () => {
         <div className="flex items-center justify-center w-full h-full">
             <Spin spinning={spinning} tip="Atualizando..." fullscreen indicator={<LoadingOutlined spin />} />
             <Tabs defaultActiveKey="1" size="middle" tabPosition="top" className="w-full h-full" onChange={handleTabChange}>
-                <TabPane tab={customTabBar(<BsMenuAppFill className="text-xl" />, "Menu To-Do")} key="1">
+                <TabPane style={{ color: palette.fontColor }} tab={customTabBar(<BsMenuAppFill style={{ color: palette.fontColor }} className="text-xl" />, "Menu To-Do")} key="1">
                     <div className="flex flex-row justify-between w-full h-1/2 mb-5">
                         <div className="justify-start w-80">
                             <h1 className="text-2xl flex flex-col">
@@ -86,7 +80,7 @@ export const ToDo: React.FC = () => {
                         </div>
                     </div>
                 </TabPane>
-                <TabPane tab={customTabBar(<LuListTodo className="text-xl" />, "A Fazer")} key="2">
+                <TabPane tab={customTabBar(<LuListTodo style={{ color: palette.fontColor }} className="text-xl" />, "A Fazer")} key="2">
                     <List
                         dataSource={toDo || []}
                         renderItem={(item: ToDoItem) => (
@@ -102,7 +96,7 @@ export const ToDo: React.FC = () => {
                         )}
                     />
                 </TabPane>
-                <TabPane tab={customTabBar(<FaBarsProgress className="text-xl" />, "Em Andamento")} key="3">
+                <TabPane tab={customTabBar(<FaBarsProgress style={{ color: palette.fontColor }} className="text-xl" />, "Em Andamento")} key="3">
                     <List
                         dataSource={toDo || []}
                         renderItem={(item: ToDoItem) => (
@@ -118,7 +112,7 @@ export const ToDo: React.FC = () => {
                         )}
                     />
                 </TabPane>
-                <TabPane tab={customTabBar(<FcTodoList className="text-xl" />, "Concluídos")} key="4">
+                <TabPane tab={customTabBar(<FcTodoList style={{ color: palette.fontColor }} className="text-xl" />, "Concluídos")} key="4">
                     <List
                         dataSource={toDo || []}
                         renderItem={(item: ToDoItem) => (
@@ -142,10 +136,10 @@ export const ToDo: React.FC = () => {
                 maskClosable={false}
                 centered
                 width={800}
-                className="overflow-hidden custom-modal"
+                className='overflow-hidden'
             >
-                <Divider orientation="left" className="m-0 p-0">
-                    <h1 className="text-xl">
+                <Divider orientation="left" className="m-0 p-0" style={{ border: palette.fontColor }}>
+                    <h1 className="text-xl" style={{ color: palette.fontColor }}>
                         Menu Tarefas
                     </h1>
                 </Divider>

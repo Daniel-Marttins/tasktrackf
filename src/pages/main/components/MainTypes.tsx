@@ -4,6 +4,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { Link, useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect } from 'react';
 import { Menu } from "antd";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface MenuItem {
     label: string;
@@ -39,6 +40,8 @@ export const MainTypes = () => {
         navigate("/home/dashboard");
     }, []);
 
+    const { palette } = useTheme();
+
     const getBreadcrumbItems = () => {
         const pathnames = location.pathname.split('/').filter(x => x);
         return pathnames.map((value, index) => {
@@ -60,13 +63,13 @@ export const MainTypes = () => {
         label: string,
         icon: JSX.Element
     ) => (
-        <Menu.SubMenu key={parentPath} icon={icon} title={label}>
+        <Menu.SubMenu key={parentPath} icon={icon} title={label} >
             {items.map((item) =>
                 item.children ? (
                     renderSubMenu(item.path, item.children, item.label, item.icon)
                 ) : (
-                    <Menu.Item key={item.path} icon={item.icon}>
-                        <Link to={item.path}>{item.label}</Link>
+                    <Menu.Item key={item.path} icon={item.icon} style={{ color: palette.fontColor }}>
+                        <Link style={{ color: palette.fontColor }} to={item.path}>{item.label}</Link>
                     </Menu.Item>
                 )
             )}

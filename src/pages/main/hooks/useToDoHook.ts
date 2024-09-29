@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Form, notification } from "antd";
+import { Form, Modal, notification } from "antd";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { ToDoItem } from "../../../models/ToDoItem";
 import { ToDoService } from "../../../services/ToDoService";
+import { useToDoManagementHook } from "../../../hooks/useToDoManagementHook";
 
 export const useToDoHook = (
     refreshToDoList: () => void,
@@ -17,7 +18,8 @@ export const useToDoHook = (
     const [selectedColor, setSelectedColor] = useState<string | "">("");
     const [spinning, setSpinning] = useState(false);
     const colors = ['#FF5733', '#33FF57', '#FFC300'];
-    const { updatedToDo } = ToDoService();
+    const { updatedToDo, deleteToDo } = ToDoService();
+    const { getToDo } = useToDoManagementHook();
 
     const onFinish = async (values: ToDoItem) => {
         try {
@@ -63,6 +65,27 @@ export const useToDoHook = (
         }
     };
 
+    const handleDeleteToDo = async (id: number) => {
+        Modal.confirm({
+            title: 'Excluir esta tarefa',
+            content: 'Você deseja excluir esta tarefa?',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk: async () => {
+                setSpinning(true);
+                await deleteToDo(id);
+                notification.success({ message: 'Tarefa excluída.' });
+                getToDo();
+                onCloseModal();
+                setSpinning(false);
+            },
+            onCancel: () => {
+                return;
+            },
+        });
+    }
+
     useEffect(() => {
         if (editMode && toDoItem) {
             form.setFieldsValue(toDoItem);
@@ -70,6 +93,6 @@ export const useToDoHook = (
         }
     }, [editMode, toDoItem]);
 
-    return { form, onFinish, colors, selectedColor, handleColorSelect, spinning };
+    return { form, onFinish, colors, selectedColor, handleColorSelect, spinning, handleDeleteToDo };
 
 }
